@@ -48,7 +48,7 @@ class DuckFinder(Sensob):
 
     def update(self):
         self.sensor.update()
-        self.value = self.sensor.get_value()
+        self.value = self.sensor.get_value() # Image object
 
     def interpret(self):
         # WHERE ARE THE DUCKS?!
