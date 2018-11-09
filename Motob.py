@@ -1,8 +1,7 @@
-from abc import ABC
 from motors import Motors
 
 
-class Motob(ABC):
+class Motob:
     def __init__(self):
         self.motors = Motors()
         self.value = ("L", 45)
