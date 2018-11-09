@@ -1,7 +1,8 @@
 __author__ = 'keithd'
 import wiringpi as wp
 
-class ZumoButton():
+
+class ZumoButton:
 
     def __init__(self):
         wp.wiringPiSetupGpio()
