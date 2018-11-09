@@ -12,9 +12,10 @@ class Behavior(ABC):
         self.priority = priority  # Float 0-1 which is given at creation and never changed
         self.weight = 0.0  # Motivation due to current conditions
 
-    @abstractmethod
     def update(self):
-        pass
+        self.weight = self.sense_and_act()*self.priority
+        self.consider_activation()
+        self.consider_deactivation()
 
     @abstractmethod
     def consider_deactivation(self):
