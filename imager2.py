@@ -10,7 +10,8 @@ class Imager:
     def __init__(self, fid=False, image=False, width=100, height=100, background='black', mode='RGB'):
         self.fid = fid  # The image file
         self.image = image  # A PIL image object
-        self.xmax = width; self.ymax = height  # These can change if there's an input image or file
+        self.xmax = width
+        self.ymax = height  # These can change if there's an input image or file
         self.mode = mode
         self.init_image(background=background)
 
