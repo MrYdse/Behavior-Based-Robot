@@ -3,9 +3,9 @@ from PIL import ImageFilter
 from PIL import ImageEnhance
 
 
-class Imager():
+class Imager:
 
-    _pixel_colors_ = {'red':(255,0,0), 'green': (0,255,0), 'blue': (0,0,255), 'white': (255,255,255),
+    _pixel_colors_ = {'red': (255, 0, 0), 'green': (0, 255, 0), 'blue': (0,0,255), 'white': (255,255,255),
                       'black': (0,0,0)}
 
     def __init__(self,fid=False,image=False,width=100,height=100,background='black',mode='RGB'):

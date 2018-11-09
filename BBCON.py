@@ -4,12 +4,13 @@ import time
 
 
 class BBCON:
-    def __init__(self):
-        self.behaviors = []
+    def __init__(self, behaviors, sensobs, motobs):
+        self.behaviors = behaviors
         self.active_behaviors = []
-        self.sensobs = []
-        self.motobs = []
+        self.sensobs = sensobs
+        self.motobs = motobs
         self.arbitrator = Arbitrator(self)
+        self.halt = False
 
     def add_behavior(self, behavior): self.behaviors.append(behavior)
 
@@ -21,16 +22,17 @@ class BBCON:
 
     def run_one_timestep(self):
         for sensob in self.sensobs:
-            sensob.update()
+            self.sensobs[sensob].update()
         for behavior in self.behaviors:
             behavior.update()
         action = self.arbitrator.choose_action()
         if action[1]:
             self.motobs[0].update(("S", 0))
+            self.halt = True
         else:
             self.motobs[0].update(action[0])
         time.sleep(0.3)
         for sensob in self.sensobs:
-            sensob.reset()
+            self.sensobs[sensob].reset()
 
 

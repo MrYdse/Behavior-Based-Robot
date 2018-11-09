@@ -25,6 +25,8 @@ class FallingOut(Sensob):
             danger = 1
         return danger
 
+# class ButtonFeeler(Sensob):
+
 
 class DuckFinder(Sensob):
     def __init__(self):
@@ -37,5 +39,5 @@ class DuckFinder(Sensob):
         self.value = self.sensor.get_value() # Image object
 
     def interpret(self):
-        # WHERE ARE THE DUCKS?!
+        pass
 
