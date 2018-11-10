@@ -12,8 +12,8 @@ class ViolateDuck(Behavior):
         return True
 
     def sense_and_act(self):
-        duckfinder_value = self.BBCON["duckfinder"].interpret()
-        peeper_value = self.BBCON["peeper"].interpret()
+        duckfinder_value = self.BBCON.sensobs["duckfinder"].interpret()
+        peeper_value = self.BBCON.sensobs["peeper"].interpret()
         match_degree = 1-abs(duckfinder_value)**(1/2)
 
         if peeper_value > 0.1:

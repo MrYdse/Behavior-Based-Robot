@@ -1,8 +1,10 @@
 from Sensob import Sensob
+import os
 from reflectance_sensors import ReflectanceSensors
 from camera import Camera
 import imager2 as IMR
 import time
+from zumo_button import *
 
 
 class FallingOut(Sensob):
@@ -26,16 +28,37 @@ class FallingOut(Sensob):
             danger = 1
         return danger
 
-# class ButtonFeeler(Sensob):
+
+class ButtonFeeler(Sensob):
+    def __init__(self):
+        super(ButtonFeeler, self).__init__()
+        self.sensor = ZumoButton()
+        self.button_pressed = False
+        self.value = 0
+
+    def update(self):
+        if self.sensor.update():
+            self.value = 1
+        else:
+            self.value = 0
+
+    def interpret(self):
+        return self.value == 1
 
 
 class DuckFinder(Sensob):
     def __init__(self):
         super(DuckFinder, self).__init__()
         self.sensor = Camera(img_width=32, img_height=24)
+        os.system('rm -f image.png')
         self.value = None
         self.K = 12
         self.imager = IMR.Imager(width=32, height=24)
+
+    def reset(self):
+        self.value = None
+        os.system('rm -f image.png')
+        self.sensor.reset()
 
     def update(self):
         self.value = self.sensor.update()  # Image object
@@ -68,10 +91,11 @@ class DuckFinder(Sensob):
         return position
 
 
-
 if __name__ == '__main__':
     mmmducks = DuckFinder()
+    button = ZumoButton()
     while True:
         mmmducks.update()
-        time.sleep(1)
         print(mmmducks.interpret())
+        button.wait_for_press()
+        mmmducks.reset()
