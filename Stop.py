@@ -15,8 +15,7 @@ class Stop(Behavior):
             self.motor_recommendation = ("S", 0)
         else:
             self.halt_request = False
-            match_degree = 0.0
-        return  match_degree
+        return match_degree
 
     def consider_activation(self):
         return True
