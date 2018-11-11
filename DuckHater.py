@@ -6,7 +6,6 @@ from zumo_button import ZumoButton
 
 if __name__ == '__main__':
     button = ZumoButton()
-    button.wait_for_press()
     BBCON = BBCON()
     fall = FallingOut()
     time.sleep(1)
@@ -25,5 +24,7 @@ if __name__ == '__main__':
         BBCON.add_behavior(behavior)
     BBCON.active_behaviors = BBCON.behaviors
     BBCON.add_motob(Motob())
+    print("Duck hater initialized")
+    button.wait_for_press()
     while not BBCON.halt:
         BBCON.run_one_timestep()

@@ -1,11 +1,10 @@
 from abc import ABC, abstractmethod
 import os
-from reflectance_sensors import ReflectanceSensors
-from camera import Camera
 import imager2 as IMR
-# import time
-from zumo_button import *
+from camera import Camera
+from reflectance_sensors import ReflectanceSensors
 from ultrasonic import Ultrasonic
+from zumo_button import ZumoButton
 
 
 class Sensob(ABC):
