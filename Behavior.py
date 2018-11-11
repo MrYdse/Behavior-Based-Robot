@@ -1,12 +1,12 @@
 from abc import ABC, abstractmethod
 # from BBCON import BBCON
+from random import randint
 
 
 class Behavior(ABC):
     def __init__(self, BBCON, priority):
         self.BBCON = BBCON
-        self.sensobs = BBCON.sensobs
-        self.motor_recommendation = ("B", 1)  # Tuple of string and int
+        self.motor_recommendation = ("B", 50)  # Tuple of string and int
         self.active_flag = True
         self.halt_request = False  # This stops the program completely
         self.priority = priority  # Float 0-1 which is given at creation and never changed
@@ -28,6 +28,24 @@ class Behavior(ABC):
     @abstractmethod
     def sense_and_act(self):
         pass
+
+
+class Wander(Behavior):
+    def __init__(self, BBCON, priority):
+        super(Wander, self).__init__(BBCON, priority)
+
+    def sense_and_act(self):
+        match_degree = 1.0
+        direction = randint(0, 4)
+        directions = ["L", "R", "F", "B"]
+        self.motor_recommendation = (directions[direction], 45)
+        return match_degree
+
+    def consider_deactivation(self):
+        return False
+
+    def consider_activation(self):
+        return True
 
 
 class DontFall(Behavior):
@@ -53,8 +71,11 @@ class DontFall(Behavior):
 
 
 class FindDuck(Behavior):
+    def __init__(self, BBCON, priority):
+        super(FindDuck, self).__init__(BBCON, priority)
+
     def sense_and_act(self):
-        duck_direction = self.sensobs["duckfinder"].get_interpretation()
+        duck_direction = self.BBCON.sensobs["duckfinder"].get_interpretation()
         if duck_direction != 2.0:
             match_degree = abs(duck_direction)**(1/2)
             if duck_direction < 0:
@@ -96,8 +117,8 @@ class Stop(Behavior):
 
 
 class ViolateDuck(Behavior):
-    def __init__(self, bbcon, priority):
-        super().__init__(bbcon, priority)
+    def __init__(self, BBCON, priority):
+        super().__init__(BBCON, priority)
 
     def consider_deactivation(self):
         return False
