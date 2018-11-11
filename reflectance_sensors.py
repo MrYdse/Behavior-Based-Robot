@@ -10,7 +10,7 @@ class ReflectanceSensors:
     # reflectance sensors
     def __init__(self, auto_calibrate=False, min_reading=100, max_reading=1000):
         self.setup()
-        if (auto_calibrate):
+        if auto_calibrate:
             # Calibration loop should last ~5 seconds
             # Calibrates all sensors
             for i in range(5):
@@ -85,14 +85,12 @@ class ReflectanceSensors:
         time = end_time - start_time
         return time
 
-
     def recharge_capacitors(self):
         # Make all sensors an output, and set all to HIGH
         GPIO.setup(self.sensor_inputs, GPIO.OUT)
         GPIO.output(self.sensor_inputs, True)
         # Wait 5 milliseconds to ensure that the capacitor is fully charged
         sleep(0.005)
-
 
     def reset(self):
         self.updated = False

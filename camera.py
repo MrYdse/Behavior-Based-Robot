@@ -21,7 +21,9 @@ class Camera:
 
     def sensor_get_value(self):
         # This is a OS call that takes a image and makes it accessible to PIL operations in the same directory
-        os.system('raspistill -t 1 -o image.png -w "' + str(self.img_width) + '" -h "' + str(self.img_height) + '" -rot "' + str(self.img_rot) + '"')
+        os.system('raspistill -t 1 -o image.png -w "' + str(self.img_width) + '" -h "' + str(self.img_height) +
+                  '" -rot "' + str(self.img_rot) + '" -th 0:0:0 -n')
+        # raspistill -v -o image.png -w 48 -h 36 -th 0:0:0 -n
         # Open the image just taken by raspicam
         # Stores the RGB array in the value field
         self.value = Image.open('image.png').convert('RGB')
