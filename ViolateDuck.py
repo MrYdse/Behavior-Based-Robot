@@ -12,11 +12,11 @@ class ViolateDuck(Behavior):
         return True
 
     def sense_and_act(self):
-        duckfinder_value = self.BBCON.sensobs["duckfinder"].interpret()
-        peeper_value = self.BBCON.sensobs["peeper"].interpret()
+        duckfinder_value = self.BBCON.sensobs["duckfinder"].get_interpretation()
+        distance = self.BBCON.sensobs["peeper"].get_interpretation()
         match_degree = 1-abs(duckfinder_value)**(1/2)
 
-        if peeper_value > 0.1:
+        if distance > 0.1:
             self.motor_recommendation = ("F", 10)
         else:
             self.motor_recommendation = ("F", 100)
