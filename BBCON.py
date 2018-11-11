@@ -8,7 +8,7 @@ class BBCON:
         self.behaviors = []
         self.active_behaviors = []
         self.sensobs = {}
-        self.motobs = []
+        self.motob = None
         self.arbitrator = Arbitrator(self)
         self.halt = False
 
@@ -16,7 +16,7 @@ class BBCON:
 
     def add_sensob(self, name, sensob): self.sensobs[name] = sensob
 
-    def add_motob(self, motob): self.motobs.append(motob)
+    def add_motob(self, motob): self.motob = motob
 
     def activate_behavior(self, behavior): self.active_behaviors.append(behavior)
 
@@ -29,10 +29,11 @@ class BBCON:
             behavior.update()
         action = self.arbitrator.choose_action()
         if action[1]:
-            self.motobs[0].update(("S", 0))
+            self.motob.update(("S", 0))
             self.halt = True
         else:
-            self.motobs[0].update(action[0])
+            print(action[0], " was used")
+            self.motob.update(action[0])
         time.sleep(0.3)
         for sensob in self.sensobs:
             self.sensobs[sensob].reset()

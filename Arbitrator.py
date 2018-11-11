@@ -14,6 +14,7 @@ class Arbitrator:
                 recommendations.append((behavior.weight, behavior))
         recommendations.sort(key=take_first)
         pick = recommendations[-1][1]
+        print(pick.__class__, " got chosen")
         choice = (pick.motor_recommendation, pick.halt_request)
         return choice
 
