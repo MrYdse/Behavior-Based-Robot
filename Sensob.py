@@ -31,14 +31,17 @@ class FallingOut(Sensob):
         self.sensor.update()
         self.value = self.sensor.get_value()
 
+    def reset(self):
+        pass
+
     def calibrate(self):
         self.sensor = ReflectanceSensors(auto_calibrate=True)
 
     def interpret(self):
         danger = 0
-        if self.value[0] < 0.8:
+        if self.value[0] < 0.65:
             danger = -1
-        elif self.value[5] < 0.8:
+        elif self.value[5] < 0.65:
             danger = 1
         return danger
 
@@ -53,8 +56,12 @@ class ButtonFeeler(Sensob):
     def update(self):
         if self.sensor.update():
             self.value = 1
+            self.button_pressed = True
         else:
             self.value = 0
+
+    def reset(self):
+        self.button_pressed = False
 
     def interpret(self):
         return self.value == 1
@@ -81,11 +88,13 @@ class DuckFinder(Sensob):
         self.value = self.sensor.update()  # Image object
         self.interpret()
 
+    def get_interpretation(self): return self.interpretation
+
     def interpret(self):
         self.imager.set_image(self.value)
         image = self.imager
         rgb_table = [[image.get_pixel(x, y) for y in range(0, self.height)] for x in range(0, self.width)]
-        lines = [0 for x in range(0, 8)]
+        lines = [0 for x in range(0, 16)]
         index = 0
         for i in range(0, len(lines)):
             for j in range(0, int(self.width/len(lines))):
@@ -93,10 +102,7 @@ class DuckFinder(Sensob):
                     if rgb_table[index][k][0] > 150 and \
                             rgb_table[index][k][1] > 130 and \
                             rgb_table[index][k][2] < 60:
-                        if rgb_table[index][k][0] < 190 and \
-                            rgb_table[index][k][1] < 190 and \
-                                rgb_table[index][k][2] > 100:
-                            lines[i] += 1
+                        lines[i] += 1
                 index += 1
         if sum(lines) < self.K:  # If there are not enough duck-pixels
             return 2.0
@@ -105,10 +111,10 @@ class DuckFinder(Sensob):
         for i in range(0, len(lines)):
             if lines[i] > maximum[1]:
                 maximum = (i, lines[i])
-        if maximum[0] < 4:
-            position = (4 - maximum[0]) * -0.25
+        if maximum[0] < 8:
+            position = (8 - maximum[0]) * -0.125
         else:
-            position = (maximum[0] - 3) * 0.25
+            position = (maximum[0] - 7) * 0.125
         self.interpretation = position
         return position
 
@@ -124,6 +130,9 @@ class Peeper(Sensob):
         self.sensor.update()
         self.value = self.sensor.get_value()
         self.interpret()
+
+    def reset(self):
+        pass
 
     def interpret(self):
         if self.value > 90:

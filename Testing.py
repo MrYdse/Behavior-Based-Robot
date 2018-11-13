@@ -4,6 +4,8 @@ from zumo_button import *
 from reflectance_sensors import ReflectanceSensors
 import time
 from ultrasonic import Ultrasonic
+from motors import *
+from robodemo import *
 
 
 def duck_color():
@@ -42,7 +44,17 @@ def distance():
         print(reading)
         time.sleep(0.6)
 
+def engines():
+    motors = Motors()
+    motors.forward(0.5, 2)
+
+def demo():
+    dancer()
+
+
 if __name__ == '__main__':
     # duck_color()
-    # edge_detection()
-    distance()
+    edge_detection()
+    # distance()
+    # engines()
+    # demo()

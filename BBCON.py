@@ -34,7 +34,7 @@ class BBCON:
         else:
             print(action[0], " was used")
             self.motob.update(action[0])
-        time.sleep(0.3)
+        # time.sleep(0.1)
         for sensob in self.sensobs:
             self.sensobs[sensob].reset()
 

@@ -35,9 +35,9 @@ class Wander(Behavior):
 
     def sense_and_act(self):
         match_degree = 1.0
-        direction = randint(0, 4)
-        directions = ["L", "R", "F", "B"]
-        self.motor_recommendation = (directions[direction], 45)
+        direction = randint(0, 3)
+        directions = ["L", "R", "F", "S"]
+        self.motor_recommendation = (directions[direction], 25)
         return match_degree
 
     def consider_deactivation(self):
@@ -57,9 +57,9 @@ class DontFall(Behavior):
         if danger != 0:
             match_degree = 1.0
             if danger == -1:
-                self.motor_recommendation = ("R", 45)
+                self.motor_recommendation = ("B", 30)
             else:
-                self.motor_recommendation = ("L", 45)
+                self.motor_recommendation = ("B", 30)
         return match_degree
 
     def consider_deactivation(self):
@@ -67,40 +67,15 @@ class DontFall(Behavior):
 
     def consider_activation(self):
         return True
-
-
-class FindDuck(Behavior):
-    def __init__(self, BBCON, priority):
-        super(FindDuck, self).__init__(BBCON, priority)
-
-    def sense_and_act(self):
-        duck_direction = self.BBCON.sensobs["duckfinder"].get_interpretation()
-        if duck_direction != 2.0:
-            match_degree = abs(duck_direction)**(1/2)
-            if duck_direction < 0:
-                self.motor_recommendation = ("L", abs(duck_direction)*45)
-            else:
-                self.motor_recommendation = ("R", duck_direction*45)
-        else:
-            match_degree = 0.8
-            self.motor_recommendation = ("L", 45)
-        return match_degree
-
-    def consider_activation(self):
-        return True
-
-    def consider_deactivation(self):
-        return False
 
 
 class Stop(Behavior):
     def __init__(self, BBCON, priority):
         super(Stop, self).__init__(BBCON, priority)
-        self.sensob = BBCON.sensobs["buttonfeeler"]
 
     def sense_and_act(self):
         match_degree = 0.0
-        if self.sensob.interpret():
+        if self.BBCON.sensobs["buttonfeeler"].interpret():
             self.halt_request = True
             match_degree = 1.0
             self.motor_recommendation = ("S", 0)
@@ -128,11 +103,36 @@ class ViolateDuck(Behavior):
     def sense_and_act(self):
         duckfinder_value = self.BBCON.sensobs["duckfinder"].get_interpretation()
         distance = self.BBCON.sensobs["peeper"].get_interpretation()
-        match_degree = 1-abs(duckfinder_value)**(1/2)
+        match_degree = 1-abs(duckfinder_value)
 
         if distance > 0.1:
-            self.motor_recommendation = ("F", 10)
+            self.motor_recommendation = ("F", 25)
         else:
-            self.motor_recommendation = ("F", 100)
+            self.motor_recommendation = ("F", 30)
 
         return match_degree
+
+
+class FindDuck(Behavior):
+    def __init__(self, BBCON, priority):
+        super(FindDuck, self).__init__(BBCON, priority)
+
+    def sense_and_act(self):
+        duck_direction = self.BBCON.sensobs["duckfinder"].get_interpretation()
+        print(duck_direction)
+        if duck_direction != 2.0:
+            match_degree = abs(duck_direction)
+            if duck_direction < 0:
+                self.motor_recommendation = ("L", abs(duck_direction)*50)
+            else:
+                self.motor_recommendation = ("R", duck_direction*50)
+        else:
+            match_degree = 0.1
+            self.motor_recommendation = ("L", 30)
+        return match_degree
+
+    def consider_activation(self):
+        return True
+
+    def consider_deactivation(self):
+        return False

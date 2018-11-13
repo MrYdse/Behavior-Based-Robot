@@ -6,15 +6,16 @@ import wiringpi as wp
 
 class Motors:
     def __init__(self):
+        self.setup()
+
+    def setup(self):
         self.max = 1024
         self.high = 500
         self.normal = 300
         self.low = 100
-        self.freq = 400  # PWM frequency
-        self.dc = 0  # Duty cycle
-        self.setup()
 
-    def setup(self):
+        wp.wiringPiSetupGpio()
+
         wp.pinMode(18, 2)
         wp.pinMode(19, 2)
         wp.pinMode(23, 1)
@@ -22,6 +23,9 @@ class Motors:
 
         self.set_left_dir(0)  # Set rotation direction to forward for both wheels
         self.set_right_dir(0)
+
+        self.freq = 400  # PWM frequency
+        self.dc = 0  # Duty cycle
         print("Completed setting up motors!")
 
     # For the following motion commands, the speed is in the range [-1, 1], indicating the fraction of the maximum
@@ -68,13 +72,14 @@ class Motors:
             self.set_right_speed(150)
         self.persist(dur)
 
+
     def stop(self):
         self.dc = 0
         self.set_left_speed(self.dc)
         self.set_right_speed(self.dc)
 
     # Val should be a 2-element vector with values for the left and right motor speeds, both in the range [-1, 1].
-    def set_value(self, val, dur=None):
+    def set_value(self, val,dur=None):
         left_val = int(self.max * val[0])
         right_val = int(self.max * val[1])
 
